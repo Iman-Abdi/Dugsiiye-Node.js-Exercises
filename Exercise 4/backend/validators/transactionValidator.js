@@ -4,10 +4,15 @@ export const transactionSchema =
   z.object({
     title: z
       .string()
-      .min(2),
+      .trim()
+      .min(2, "Title must be at least 2 characters"),
 
     amount:
-      z.number(),
+      z.coerce
+        .number({
+          message: "Amount is required",
+        })
+        .positive("Amount must be greater than 0"),
 
     type: z.enum([
       "income",
@@ -15,9 +20,13 @@ export const transactionSchema =
     ]),
 
     category:
-      z.string(),
+      z
+        .string()
+        .trim()
+        .min(2, "Category is required"),
 
     date: z
       .string()
+      .trim()
       .optional(),
   });

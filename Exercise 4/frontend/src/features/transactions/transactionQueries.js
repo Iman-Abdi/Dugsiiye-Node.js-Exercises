@@ -36,18 +36,23 @@ export const useCreateTransaction =
         createTransaction,
 
       onSuccess:
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: [
-              "transactions",
-            ],
-          });
-
-          queryClient.invalidateQueries({
-            queryKey: [
-              "summary",
-            ],
-          });
+        async () => {
+          await Promise.all([
+            queryClient.invalidateQueries({
+              queryKey: [
+                "transactions",
+              ],
+              refetchType:
+                "active",
+            }),
+            queryClient.invalidateQueries({
+              queryKey: [
+                "summary",
+              ],
+              refetchType:
+                "active",
+            }),
+          ]);
         },
     });
   };
@@ -63,18 +68,23 @@ export const useUpdateTransaction =
         updateTransaction,
 
       onSuccess:
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: [
-              "transactions",
-            ],
-          });
-
-          queryClient.invalidateQueries({
-            queryKey: [
-              "summary",
-            ],
-          });
+        async () => {
+          await Promise.all([
+            queryClient.invalidateQueries({
+              queryKey: [
+                "transactions",
+              ],
+              refetchType:
+                "active",
+            }),
+            queryClient.invalidateQueries({
+              queryKey: [
+                "summary",
+              ],
+              refetchType:
+                "active",
+            }),
+          ]);
         },
     });
   };
@@ -90,18 +100,23 @@ export const useDeleteTransaction =
         deleteTransaction,
 
       onSuccess:
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: [
-              "transactions",
-            ],
-          });
-
-          queryClient.invalidateQueries({
-            queryKey: [
-              "summary",
-            ],
-          });
+        async () => {
+          await Promise.all([
+            queryClient.invalidateQueries({
+              queryKey: [
+                "transactions",
+              ],
+              refetchType:
+                "active",
+            }),
+            queryClient.invalidateQueries({
+              queryKey: [
+                "summary",
+              ],
+              refetchType:
+                "active",
+            }),
+          ]);
         },
     });
   };

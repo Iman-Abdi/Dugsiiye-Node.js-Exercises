@@ -33,8 +33,17 @@ import {
   useTransactions,
 } from "../features/transactions/transactionQueries";
 
-const categories =
-  ["Food", "Transport", "Bills", "Salary", "Shopping", "Health", "Other"];
+import {
+  useCategories,
+} from "../features/categories/categoryQueries";
+
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  CalendarDays,
+  Search,
+  SlidersHorizontal,
+} from "lucide-react";
 
 const money =
   (value = 0) =>
@@ -49,6 +58,11 @@ export default function Transactions() {
     isLoading,
     error,
   } = useTransactions();
+
+  const {
+    data: categories = [],
+  } =
+    useCategories();
 
   const [search, setSearch] =
     useState("");
@@ -74,7 +88,7 @@ export default function Transactions() {
           <CardHeader>
             <CardTitle>Failed to load transactions</CardTitle>
             <CardDescription>
-              Please check that the backend API is running and your login session is still valid.
+              Please check your login session is valid.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -104,61 +118,77 @@ export default function Transactions() {
       }
     ) || [];
 
+  const totalIncome =
+    data
+      ?.filter((transaction) => transaction.type === "income")
+      .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0) || 0;
+
+  const totalExpense =
+    data
+      ?.filter((transaction) => transaction.type === "expense")
+      .reduce((sum, transaction) => sum + Number(transaction.amount || 0), 0) || 0;
+
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight">
-              Transactions
-            </h1>
+      <div className="space-y-5">
+        <div className="rounded-lg border bg-card p-5 shadow-sm md:p-6">
+          <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-center">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">
+                Money movement
+              </p>
 
-            <p className="mt-2 text-muted-foreground">
-              Add, edit, search, and filter records from your API.
-            </p>
+              <h1 className="mt-1 text-3xl font-semibold tracking-tight">
+                Transactions
+              </h1>
+
+              <p className="mt-2 max-w-2xl text-muted-foreground">
+                Review, filter, create, update, and remove your income and expense records.
+              </p>
+            </div>
+
+            <div className="mr-6 sm:flex-row sm:items-center">
+              <div className="flex justify-end">
+              <CreateTransaction/>
+              </div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <Metric label="Showing" value={filteredTransactions.length} />
+                <Metric label="Income" value={money(totalIncome)} tone="income" icon={ArrowUpRight} />
+                <Metric label="Expense" value={money(totalExpense)} tone="expense" icon={ArrowDownRight} />
+              </div>
+              
+            </div>
+            
           </div>
-
-          <Card size="sm" className="w-fit min-w-32">
-            <CardContent>
-              <p className="text-sm text-muted-foreground">Showing</p>
-              <p className="mt-1 text-2xl font-semibold">{filteredTransactions.length}</p>
-            </CardContent>
-          </Card>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Add transaction</CardTitle>
-            <CardDescription>Create a new income or expense record.</CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <CreateTransaction />
-          </CardContent>
-        </Card>
-
-        <Card>
+        <Card className="shadow-sm">
           <CardContent className="grid gap-3 md:grid-cols-[1fr_220px]">
-            <Input
-              placeholder="Search by title..."
-              value={search}
-              onChange={(e) =>
-                setSearch(
-                  e.target.value
-                )
-              }
-            />
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                className="pl-9"
+                placeholder="Search by title..."
+                value={search}
+                onChange={(e) =>
+                  setSearch(
+                    e.target.value
+                  )
+                }
+              />
+            </div>
 
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger className="w-full">
+                <SlidersHorizontal className="size-4 text-muted-foreground" />
                 <SelectValue placeholder="All categories" />
               </SelectTrigger>
 
               <SelectContent>
                 <SelectItem value="all">All categories</SelectItem>
                 {categories.map((item) => (
-                  <SelectItem key={item} value={item}>
-                    {item}
+                  <SelectItem key={item._id || item.name} value={item.name}>
+                    {item.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -180,7 +210,7 @@ export default function Transactions() {
             </CardContent>
           </Card>
         ) : (
-          <Card>
+          <Card className="shadow-sm">
             <CardContent className="overflow-x-auto">
               <Table>
                 <TableHeader>
@@ -189,8 +219,8 @@ export default function Transactions() {
                     <TableHead>Category</TableHead>
                     <TableHead>Type</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                    <TableHead className="min-w-64">Actions</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
 
@@ -207,15 +237,21 @@ export default function Transactions() {
                         </span>
                       </TableCell>
                       <TableCell>
-                        {new Date(transaction.date).toLocaleDateString()}
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <CalendarDays className="size-4" />
+                          {new Date(transaction.date).toLocaleDateString()}
+                        </div>
                       </TableCell>
-                      <TableCell className={transaction.type === "income" ? "text-right font-medium text-emerald-600" : "text-right font-medium text-rose-600"}>
+                      <TableCell className={transaction.type === "income" ? "font-medium text-emerald-600" : "font-medium text-rose-600"}>
                         {transaction.type === "income" ? "+" : "-"}{money(transaction.amount)}
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-start gap-4">
                           <EditTransaction transaction={transaction} />
-                          <DeleteTransaction id={transaction._id} />
+                          <DeleteTransaction
+                            id={transaction._id}
+                            title={transaction.title}
+                          />
                         </div>
                       </TableCell>
                     </TableRow>
@@ -227,5 +263,33 @@ export default function Transactions() {
         )}
       </div>
     </DashboardLayout>
+  );
+}
+
+function Metric({
+  label,
+  value,
+  tone,
+  icon: Icon,
+}) {
+  const toneClass =
+    tone === "income"
+      ? "text-emerald-700"
+      : tone === "expense"
+        ? "text-rose-700"
+        : "text-foreground";
+
+  return (
+    <div className="min-w-32 rounded-lg border bg-background px-4 py-3">
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        {Icon && (
+          <Icon className="size-4" />
+        )}
+        {label}
+      </div>
+      <p className={`mt-1 text-xl font-semibold tracking-tight ${toneClass}`}>
+        {value}
+      </p>
+    </div>
   );
 }

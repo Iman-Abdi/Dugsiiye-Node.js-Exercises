@@ -48,7 +48,7 @@ export default function Summary() {
           </h1>
 
           <p className="mt-2 text-muted-foreground">
-            Totals grouped by category from the backend summary endpoint.
+            Totals grouped by category summary.
           </p>
         </div>
 

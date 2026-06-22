@@ -16,6 +16,7 @@ import {
   ArrowUpRight,
   CircleDollarSign,
   ReceiptText,
+  Sparkles,
 } from "lucide-react";
 
 const money =
@@ -41,7 +42,7 @@ export default function Dashboard() {
   if (isLoading)
     return (
       <DashboardLayout>
-        <div className="h-48 animate-pulse rounded-xl bg-muted" />
+        <div className="h-48 animate-pulse rounded-2xl bg-muted" />
       </DashboardLayout>
     );
 
@@ -63,29 +64,39 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <div>
-            <p className="text-sm text-muted-foreground">
-              Welcome back
-            </p>
+      <div className="space-y-5">
+        <section className="overflow-hidden rounded-2xl border bg-card shadow-sm">
+          <div className="grid gap-6 p-5 md:p-6 lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="space-y-3 mt-10">
+              <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+                Hi {data?.name || "there"}, your money is organized.
+              </h1>
 
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight">
-              Hi {data?.name || "there"}
-            </h1>
+              <p className="mt-3 max-w-2xl text-muted-foreground">
+                Track income, expenses, balance, and recent movements.
+              </p>
+            </div>
 
-            <p className="mt-2 max-w-2xl text-muted-foreground">
-              A simple overview of your balance, income, expenses, and recent API activity.
-            </p>
+            <div className="rounded-xl border bg-background p-4">
+              <p className="text-sm text-muted-foreground">
+                Current balance
+              </p>
+              <p className="mt-2 text-4xl font-semibold tracking-tight">
+                {money(balance)}
+              </p>
+              <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                <div className="rounded-lg bg-emerald-50 p-3 text-emerald-700">
+                  <p>Income</p>
+                  <p className="mt-1 font-semibold">{money(income)}</p>
+                </div>
+                <div className="rounded-lg bg-rose-50 p-3 text-rose-700">
+                  <p>Expenses</p>
+                  <p className="mt-1 font-semibold">{money(expenses)}</p>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div className="rounded-lg border bg-card px-4 py-3 text-sm text-muted-foreground">
-            Signed in as{" "}
-            <span className="font-medium text-foreground">
-              {data?.email}
-            </span>
-          </div>
-        </div>
+        </section>
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <StatCard icon={CircleDollarSign} label="Current balance" value={money(balance)} tone="slate" />
@@ -94,11 +105,11 @@ export default function Dashboard() {
           <StatCard icon={ReceiptText} label="Transactions" value={transactionsLoading ? "..." : transactions.length} tone="slate" />
         </section>
 
-        <section className="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">
-          <Card>
+        <section>
+          <Card className="shadow-sm">
             <CardHeader>
               <CardTitle>Recent activity</CardTitle>
-              <CardDescription>Latest transactions from the API.</CardDescription>
+              <CardDescription>Latest transactions.</CardDescription>
             </CardHeader>
 
             <CardContent>
@@ -109,7 +120,7 @@ export default function Dashboard() {
                       <div>
                         <p className="font-medium">{transaction.title}</p>
                         <p className="text-sm text-muted-foreground">
-                          {transaction.category} · {new Date(transaction.date).toLocaleDateString()}
+                          {transaction.category} - {new Date(transaction.date).toLocaleDateString()}
                         </p>
                       </div>
 
@@ -123,19 +134,6 @@ export default function Dashboard() {
                     No transactions yet. Add your first one to start tracking.
                   </div>
                 )}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>API status</CardTitle>
-              <CardDescription>How the frontend is connected.</CardDescription>
-            </CardHeader>
-
-            <CardContent>
-              <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">
-                Protected requests use the saved auth token. Transaction changes refresh both the transaction list and summary data.
               </div>
             </CardContent>
           </Card>
@@ -153,7 +151,7 @@ function StatCard({ icon: Icon, label, value, tone }) {
   };
 
   return (
-    <Card>
+    <Card className="shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
       <CardContent>
         <div className={`mb-4 flex size-10 items-center justify-center rounded-lg ${colors[tone]}`}>
           <Icon className="size-5" />
