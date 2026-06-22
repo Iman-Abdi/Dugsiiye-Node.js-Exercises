@@ -67,11 +67,11 @@ app.use(limiter);
 app.use(express.json());
 app.use(logger);
 
-app.use("/auth", authRoutes);
-app.use("/transactions", transactionRoutes);
-app.use("/upload", uploadRoutes);
-app.use("/categories", categoryRoutes);
-app.use("/admin", adminRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use(
   "/docs",
