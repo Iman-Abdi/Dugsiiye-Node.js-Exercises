@@ -5,13 +5,7 @@ export const uploadProfilePicture =
     const response =
       await api.post(
         "/upload/profile-picture",
-        formData,
-        {
-          headers: {
-            "Content-Type":
-              "multipart/form-data",
-          },
-        }
+        formData
       );
 
     return response.data;
