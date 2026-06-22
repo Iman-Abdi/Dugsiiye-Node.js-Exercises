@@ -29,6 +29,11 @@ export default function EditTransaction({
       transaction.title
     );
 
+  const [amount, setAmount] =
+    useState(
+      transaction.amount
+    );
+
   const submit =
     async () => {
       try {
@@ -40,6 +45,8 @@ export default function EditTransaction({
             data: {
               ...transaction,
               title,
+              amount:
+                Number(amount),
             },
           }
         );
@@ -55,7 +62,7 @@ export default function EditTransaction({
     };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-col gap-2 sm:flex-row">
       <Input
         value={title}
         onChange={(e) =>
@@ -65,12 +72,23 @@ export default function EditTransaction({
         }
       />
 
+      <Input
+        type="number"
+        value={amount}
+        onChange={(e) =>
+          setAmount(
+            e.target.value
+          )
+        }
+      />
+
       <Button
         onClick={
           submit
         }
+        disabled={mutation.isPending}
       >
-        Save
+        {mutation.isPending ? "Saving..." : "Save"}
       </Button>
     </div>
   );

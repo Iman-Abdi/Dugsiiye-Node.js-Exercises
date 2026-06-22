@@ -16,6 +16,14 @@ import {
 } from "@/components/ui/button";
 
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import {
   toast,
 } from "sonner";
 
@@ -61,73 +69,84 @@ export default function Register() {
     };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <form
-        onSubmit={
-          submit
-        }
-        className="w-full max-w-md space-y-4"
-      >
-        <h1 className="text-3xl font-bold">
-          Register
-        </h1>
+    <div className="grid min-h-screen place-items-center px-4 py-10">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl">Create your account</CardTitle>
+          <CardDescription>
+            Build your financial dashboard in a few seconds.
+          </CardDescription>
+        </CardHeader>
 
-        <Input
-          placeholder="Name"
-          value={form.name}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              name:
-                e.target
-                  .value,
-            })
-          }
-        />
-
-        <Input
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              email:
-                e.target
-                  .value,
-            })
-          }
-        />
-
-        <Input
-          type="password"
-          placeholder="Password"
-          value={
-            form.password
-          }
-          onChange={(e) =>
-            setForm({
-              ...form,
-              password:
-                e.target
-                  .value,
-            })
-          }
-        />
-
-        <Button className="w-full">
-          Register
-        </Button>
-
-        <p>
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="underline"
+        <CardContent>
+          <form
+            onSubmit={
+              submit
+            }
+            className="space-y-4"
           >
-            Login
-          </Link>
-        </p>
-      </form>
+            <Input
+              placeholder="Name"
+              required
+              value={form.name}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  name:
+                    e.target
+                      .value,
+                })
+              }
+            />
+
+            <Input
+              type="email"
+              placeholder="Email"
+              required
+              value={form.email}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  email:
+                    e.target
+                      .value,
+                })
+              }
+            />
+
+            <Input
+              type="password"
+              placeholder="Password"
+              required
+              value={
+                form.password
+              }
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  password:
+                    e.target
+                      .value,
+                })
+              }
+            />
+
+            <Button className="w-full" size="lg" disabled={registerMutation.isPending}>
+              {registerMutation.isPending ? "Creating account..." : "Register"}
+            </Button>
+
+            <p className="text-center text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="font-medium text-primary underline-offset-4 hover:underline"
+              >
+                Login
+              </Link>
+            </p>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

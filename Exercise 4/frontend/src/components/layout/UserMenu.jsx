@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 
 import useAuthStore from "../../store/authStore";
+import { useProfile } from "../../features/auth/authQueries";
 
 export default function UserMenu() {
   const navigate =
@@ -25,6 +26,9 @@ export default function UserMenu() {
       (state) =>
         state.logout
     );
+
+  const { data: user } =
+    useProfile();
 
   const handleLogout =
     () => {
@@ -38,9 +42,9 @@ export default function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar>
+        <Avatar className="ring-2 ring-white shadow-sm">
           <AvatarFallback>
-            U
+            {user?.name?.charAt(0)?.toUpperCase() || "U"}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

@@ -46,6 +46,15 @@ const protect = async (
         "-password"
       );
 
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({
+          message:
+            "User not found",
+        });
+    }
+
     next();
   } catch (error) {
     return res

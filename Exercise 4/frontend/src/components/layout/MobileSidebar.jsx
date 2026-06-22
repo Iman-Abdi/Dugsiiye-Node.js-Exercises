@@ -1,4 +1,5 @@
 import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import {
   Sheet,
@@ -8,21 +9,22 @@ import {
 
 import Sidebar from "./Sidebar";
 
-import MobileSidebar from "./MobileSidebar";
-
 export default function MobileSidebar() {
   return (
     <Sheet>
-      <SheetTrigger>
-        <Menu />
+      <SheetTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          aria-label="Open navigation"
+        >
+          <Menu />
+        </Button>
       </SheetTrigger>
 
-      <SheetContent side="left">
+      <SheetContent side="left" className="w-72 p-0">
         <Sidebar />
       </SheetContent>
-      <div className="md:hidden">
-  <MobileSidebar />
-</div>
     </Sheet>
   );
 }

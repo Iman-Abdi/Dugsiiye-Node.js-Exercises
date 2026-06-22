@@ -22,6 +22,10 @@ export default function DeleteTransaction({
 
   const handleDelete =
     async () => {
+      if (!window.confirm("Delete this transaction?")) {
+        return;
+      }
+
       try {
         await mutation.mutateAsync(
           id
@@ -41,6 +45,7 @@ export default function DeleteTransaction({
     <Button
       variant="destructive"
       size="icon"
+      disabled={mutation.isPending}
       onClick={
         handleDelete
       }

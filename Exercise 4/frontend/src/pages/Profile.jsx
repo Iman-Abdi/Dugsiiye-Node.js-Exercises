@@ -10,6 +10,14 @@ import { Button } from "@/components/ui/button";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 import { toast } from "sonner";
 
 export default function Profile() {
@@ -67,7 +75,7 @@ export default function Profile() {
   if (isLoading) {
     return (
       <DashboardLayout>
-        <h1>Loading...</h1>
+        <div className="h-72 animate-pulse rounded-xl bg-muted" />
       </DashboardLayout>
     );
   }
@@ -75,24 +83,33 @@ export default function Profile() {
   if (error) {
     return (
       <DashboardLayout>
-        <h1>
-          Failed to load profile
-        </h1>
+        <Card className="border-destructive/30 bg-destructive/5 text-destructive">
+          <CardHeader>
+            <CardTitle>Failed to load profile</CardTitle>
+          </CardHeader>
+        </Card>
       </DashboardLayout>
     );
   }
 
   return (
     <DashboardLayout>
-      <div className="max-w-2xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold">
-          Profile
-        </h1>
+      <div className="mx-auto max-w-3xl space-y-6">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Profile
+          </h1>
 
-        <div className="border rounded-lg p-6 space-y-4">
+          <p className="mt-2 text-muted-foreground">
+            Manage your account details and profile image.
+          </p>
+        </div>
+
+        <Card>
+          <CardContent>
           <div className="flex items-center gap-4">
-            <Avatar className="h-20 w-20">
-              <AvatarFallback>
+            <Avatar className="h-16 w-16">
+              <AvatarFallback className="text-xl font-semibold">
                 {user?.name
                   ?.charAt(0)
                   ?.toUpperCase()}
@@ -110,38 +127,32 @@ export default function Profile() {
             </div>
           </div>
 
-          <div>
-            <p>
-              <strong>
-                Name:
-              </strong>{" "}
-              {user?.name}
-            </p>
-
-            <p>
-              <strong>
-                Email:
-              </strong>{" "}
-              {user?.email}
-            </p>
-
-            <p>
-              <strong>
-                Role:
-              </strong>{" "}
-              {user?.role}
-            </p>
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            {[
+              ["Name", user?.name],
+              ["Email", user?.email],
+              ["Role", user?.role || "user"],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-lg border bg-muted/30 p-4">
+                <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
+                <p className="mt-2 font-medium">{value}</p>
+              </div>
+            ))}
           </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="border rounded-lg p-6 space-y-4">
-          <h2 className="text-xl font-semibold">
-            Upload Profile Picture
-          </h2>
+        <Card>
+          <CardHeader>
+            <CardTitle>Upload profile picture</CardTitle>
+            <CardDescription>Choose an image from your device.</CardDescription>
+          </CardHeader>
 
+          <CardContent>
           <input
             type="file"
             accept="image/*"
+            className="block w-full rounded-lg border border-dashed bg-muted/30 p-4 text-sm"
             onChange={(e) =>
               setFile(
                 e.target.files[0]
@@ -150,6 +161,7 @@ export default function Profile() {
           />
 
           <Button
+            className="mt-4"
             onClick={
               handleUpload
             }
@@ -161,7 +173,8 @@ export default function Profile() {
               ? "Uploading..."
               : "Upload Image"}
           </Button>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );

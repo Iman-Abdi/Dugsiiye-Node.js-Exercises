@@ -1,8 +1,23 @@
 import axios from "axios";
 
+const configuredBaseUrl =
+  import.meta.env.VITE_API_URL ||
+  "http://localhost:5000";
+
+const baseURL = configuredBaseUrl
+  .replace(/\/+$/, "")
+  .endsWith("/api")
+  ? configuredBaseUrl.replace(
+      /\/+$/,
+      ""
+    )
+  : `${configuredBaseUrl.replace(
+      /\/+$/,
+      ""
+    )}/api`;
+
 const api = axios.create({
-  baseURL:
-    import.meta.env.VITE_API_URL,
+  baseURL,
 });
 
 api.interceptors.request.use(
@@ -26,7 +41,9 @@ api.interceptors.response.use(
 
   (error) => {
     if (
-      error.response?.status === 401
+      error.response?.status === 401 &&
+      window.location.pathname !==
+        "/login"
     ) {
       localStorage.removeItem(
         "token"

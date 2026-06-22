@@ -42,6 +42,12 @@ export const useCreateTransaction =
               "transactions",
             ],
           });
+
+          queryClient.invalidateQueries({
+            queryKey: [
+              "summary",
+            ],
+          });
         },
     });
   };
@@ -63,6 +69,12 @@ export const useUpdateTransaction =
               "transactions",
             ],
           });
+
+          queryClient.invalidateQueries({
+            queryKey: [
+              "summary",
+            ],
+          });
         },
     });
   };
@@ -82,6 +94,12 @@ export const useDeleteTransaction =
           queryClient.invalidateQueries({
             queryKey: [
               "transactions",
+            ],
+          });
+
+          queryClient.invalidateQueries({
+            queryKey: [
+              "summary",
             ],
           });
         },

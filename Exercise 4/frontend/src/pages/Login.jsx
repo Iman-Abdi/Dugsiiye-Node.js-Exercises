@@ -16,6 +16,14 @@ import {
 } from "@/components/ui/button";
 
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import {
   toast,
 } from "sonner";
 
@@ -77,53 +85,62 @@ export default function Login() {
     };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <form
-        onSubmit={
-          submit
-        }
-        className="w-full max-w-md space-y-4"
-      >
-        <h1 className="text-3xl font-bold">
-          Login
-        </h1>
+    <div className="grid min-h-screen place-items-center px-4 py-10">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl">Welcome back</CardTitle>
+          <CardDescription>
+            Sign in to continue tracking your income and expenses.
+          </CardDescription>
+        </CardHeader>
 
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) =>
-            setEmail(
-              e.target.value
-            )
-          }
-        />
-
-        <Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) =>
-            setPassword(
-              e.target.value
-            )
-          }
-        />
-
-        <Button className="w-full">
-          Login
-        </Button>
-
-        <p>
-          No account?{" "}
-          <Link
-            to="/register"
-            className="underline"
+        <CardContent>
+          <form
+            onSubmit={
+              submit
+            }
+            className="space-y-4"
           >
-            Register
-          </Link>
-        </p>
-      </form>
+            <Input
+              type="email"
+              placeholder="Email"
+              required
+              value={email}
+              onChange={(e) =>
+                setEmail(
+                  e.target.value
+                )
+              }
+            />
+
+            <Input
+              type="password"
+              placeholder="Password"
+              required
+              value={password}
+              onChange={(e) =>
+                setPassword(
+                  e.target.value
+                )
+              }
+            />
+
+            <Button className="w-full" size="lg" disabled={loginMutation.isPending}>
+              {loginMutation.isPending ? "Signing in..." : "Login"}
+            </Button>
+
+            <p className="text-center text-sm text-muted-foreground">
+              No account?{" "}
+              <Link
+                to="/register"
+                className="font-medium text-primary underline-offset-4 hover:underline"
+              >
+                Register
+              </Link>
+            </p>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
